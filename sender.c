@@ -11,5 +11,7 @@
 
 int main(int argc, char * argv[])
 {
- 
+    int senderPort = atoi(argv[2]);
+    int receiverPort = atoi(argv[1]);
+    int packetDropProbability = atof(argv[3]);
 }
