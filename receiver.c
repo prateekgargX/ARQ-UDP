@@ -11,5 +11,8 @@
 
 int main(int argc, char * argv[])
 {
- 
+    int senderPort = atoi(argv[1]);
+    int receiverPort = atoi(argv[2]);
+    int transmissionTime = atof(argv[3]);
+    int numPackets =  atoi(argv[4]);
 }
