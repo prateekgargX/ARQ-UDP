@@ -12,10 +12,10 @@
 
 int main(int argc, char * argv[])
 {
-	// if(argc <4){
-	// 	perror("Incomplete Arguments");
-	// 	exit(EXIT_FAILURE);
-	// }
+	if(argc <4){
+		puts("Incomplete Arguments");
+		exit(EXIT_FAILURE);
+	}
 	
     int receiverPort = atoi(argv[1]);
     int senderPort = atoi(argv[2]);  //Not used
@@ -59,14 +59,14 @@ int main(int argc, char * argv[])
 					MSG_WAITALL, ( struct sockaddr *) &cliaddr,
 					&len);
 		buffer[n] = '\0';
-		int packetID = (buffer[n-1] - '0');
-
-
 		//printf("Received %s\n", buffer);
+
+		int packetID = (buffer[n-1] - '0');
 
 		if(packetID==expectedID){
 
 			randNum = (double)rand()/RAND_MAX; 
+
 			if(randNum>=packetDropProbability){
 				expectedID++;
 				char ACK[]="Acknowledgement:0";
@@ -74,6 +74,7 @@ int main(int argc, char * argv[])
 
 				sendto(socketDesc, (const char *)ACK, strlen(ACK),MSG_CONFIRM, (const struct sockaddr *) &cliaddr,len);
 				printf("Sent %s\n",ACK);
+			
 			} else printf("Dropped %s\n",buffer); 
 			
 		} else {

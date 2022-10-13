@@ -11,10 +11,10 @@
 
 int main(int argc, char * argv[])
 {
-    // if(argc <5){
-	// 	perror("Incomplete Arguments");
-	// 	exit(EXIT_FAILURE);
-	// }
+    if(argc <5){
+		puts("Incomplete Arguments");
+		exit(EXIT_FAILURE);
+	}
 	
     int senderPort = atoi(argv[1]);
     int receiverPort = atoi(argv[2]); //Not used
@@ -52,19 +52,19 @@ int main(int argc, char * argv[])
 	int n, len;	
 	for (int i = 1; i <= numPackets; i++)
 	{
-		///assuming 0<i+1<9 
+		// assuming 0<i+1<9 
 	    char Packet[]="Packet:0";
 	    Packet[7] = '0'+i; 
 
 		sendto(socketDesc, (const char *)Packet, strlen(Packet),MSG_CONFIRM, (const struct sockaddr *) &servaddr,sizeof(servaddr));
-		printf("Sent Packet:%d\n",i);
+		printf("Sent %s\n",Packet);
 				
 		n = recvfrom(socketDesc, (char *)buffer, MAXLINE,0, (struct sockaddr *) &servaddr,&len);
 		buffer[n] = '\0';
 		int ackID = (buffer[16]-'0');
 
-		if(n < 0){i--; printf("Retransmission Timer Expired\n"); continue;}
-		//kprintf("Received %s\n", buffer);
+		if(n < 0){i--; printf("Retransmission Timer Expired. "); continue;}
+		// printf("Received %s\n", buffer);
 
 		if(i+1!=ackID){i--; continue;}
 
