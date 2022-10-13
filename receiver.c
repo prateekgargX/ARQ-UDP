@@ -59,9 +59,9 @@ int main(int argc, char * argv[])
 					MSG_WAITALL, ( struct sockaddr *) &cliaddr,
 					&len);
 		buffer[n] = '\0';
-		//printf("Received %s\n", buffer);
+		printf("Received %s. ", buffer);
 
-		int packetID = (buffer[n-1] - '0');
+		int packetID = atoi(buffer+7);
 
 		if(packetID==expectedID){
 
@@ -69,8 +69,8 @@ int main(int argc, char * argv[])
 
 			if(randNum>=packetDropProbability){
 				expectedID++;
-				char ACK[]="Acknowledgement:0";
-				ACK[16] = expectedID+'0';
+				char ACK[]="Acknowledgement:00000";
+				sprintf(ACK+16, "%d", expectedID);
 
 				sendto(socketDesc, (const char *)ACK, strlen(ACK),MSG_CONFIRM, (const struct sockaddr *) &cliaddr,len);
 				printf("Sent %s\n",ACK);
@@ -78,8 +78,8 @@ int main(int argc, char * argv[])
 			} else printf("Dropped %s\n",buffer); 
 			
 		} else {
-			char ACK[]="Acknowledgement:0";
-			ACK[16] = expectedID+'0';
+			char ACK[]="Acknowledgement:000000";
+			sprintf(ACK+16, "%d", expectedID);
 
 			sendto(socketDesc, (const char *)ACK, strlen(ACK),MSG_CONFIRM, (const struct sockaddr *) &cliaddr,len);
 			printf("Sent %s\n",ACK);

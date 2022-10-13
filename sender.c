@@ -28,7 +28,7 @@ int main(int argc, char * argv[])
 	
 	struct timeval tv;
 	tv.tv_sec = retransmissionTime/1000;
-	tv.tv_usec = 0;
+	tv.tv_usec = (retransmissionTime%1000)*1000;
 
 	// Creating socket file descriptor
 	if ( (socketDesc = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
@@ -52,19 +52,18 @@ int main(int argc, char * argv[])
 	int n, len;	
 	for (int i = 1; i <= numPackets; i++)
 	{
-		// assuming 0<i+1<9 
-	    char Packet[]="Packet:0";
-	    Packet[7] = '0'+i; 
+	    char Packet[]="Packet:00000";
+		sprintf(Packet+7, "%d", i);
 
 		sendto(socketDesc, (const char *)Packet, strlen(Packet),MSG_CONFIRM, (const struct sockaddr *) &servaddr,sizeof(servaddr));
 		printf("Sent %s\n",Packet);
 				
 		n = recvfrom(socketDesc, (char *)buffer, MAXLINE,0, (struct sockaddr *) &servaddr,&len);
 		buffer[n] = '\0';
-		int ackID = (buffer[16]-'0');
+		int ackID = atoi(buffer+16);
 
 		if(n < 0){i--; printf("Retransmission Timer Expired. "); continue;}
-		// printf("Received %s\n", buffer);
+		printf("Received %s. ", buffer);
 
 		if(i+1!=ackID){i--; continue;}
 
