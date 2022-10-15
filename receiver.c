@@ -59,12 +59,17 @@ int main(int argc, char * argv[])
 					MSG_WAITALL, ( struct sockaddr *) &cliaddr,
 					&len);
 		buffer[n] = '\0';
-		printf("Received %s. ", buffer);
-
-		int packetID = atoi(buffer+7);
+		
+        int packetID = atoi(buffer+7);
+        
+        if(packetID==0){ // Terminating sequence
+            printf("Terminating Sequence Received.\n");
+            break;
+        }
+        printf("Received %s. ", buffer);
 
 		if(packetID==expectedID){
-
+        
 			randNum = (double)rand()/RAND_MAX; 
 
 			if(randNum>=packetDropProbability){
