@@ -11,6 +11,7 @@
 
 int main(int argc, char * argv[])
 {
+    FILE *f2 = fopen("sender.txt", "w");
     if(argc <5){
 		puts("Incomplete Arguments");
 		exit(EXIT_FAILURE);
@@ -57,24 +58,32 @@ int main(int argc, char * argv[])
 
 		sendto(socketDesc, (const char *)Packet, strlen(Packet),MSG_CONFIRM, (const struct sockaddr *) &servaddr,sizeof(servaddr));
 		printf("Sent %s\n",Packet);
+        fprintf(f2,"Sent %s\n",Packet);
 				
 		n = recvfrom(socketDesc, (char *)buffer, MAXLINE,0, (struct sockaddr *) &servaddr,&len);
 		buffer[n] = '\0';
 		int ackID = atoi(buffer+16);
 
-		if(n < 0){i--; printf("Retransmission Timer Expired. "); continue;}
+		if(n < 0){
+            i--; 
+            printf("Retransmission Timer Expired. "); 
+            fprintf(f2,"Retransmission Timer Expired. "); 
+            continue;
+        }
 		printf("Received %s. ", buffer);
+        fprintf(f2,"Received %s. ", buffer);
 
 		if(i+1!=ackID){i--; continue;}
 
 
 	}
     printf("\n");
+    
     char Packet[]="Packet:0";
-    //sprintf(Packet+7, "%d", i);
     sendto(socketDesc, (const char *)Packet, strlen(Packet),MSG_CONFIRM, (const struct sockaddr *) &servaddr,sizeof(servaddr));
 
 	close(socketDesc);
+    fclose(f2); 
 	return 0;
 
 }
