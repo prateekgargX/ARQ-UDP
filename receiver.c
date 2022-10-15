@@ -12,6 +12,7 @@
 
 int main(int argc, char * argv[])
 {
+    FILE *f1 = fopen("receiver.txt", "w");
 	if(argc <4){
 		puts("Incomplete Arguments");
 		exit(EXIT_FAILURE);
@@ -64,9 +65,11 @@ int main(int argc, char * argv[])
         
         if(packetID==0){ // Terminating sequence
             printf("Terminating Sequence Received.\n");
+            fprintf(f1,"Terminating Sequence Received.\n");
             break;
         }
         printf("Received %s. ", buffer);
+        fprintf(f1,"Received %s. ", buffer);
 
 		if(packetID==expectedID){
         
@@ -76,22 +79,29 @@ int main(int argc, char * argv[])
 				expectedID++;
 				char ACK[]="Acknowledgement:00000";
 				sprintf(ACK+16, "%d", expectedID);
+               
 
 				sendto(socketDesc, (const char *)ACK, strlen(ACK),MSG_CONFIRM, (const struct sockaddr *) &cliaddr,len);
 				printf("Sent %s\n",ACK);
+                fprintf(f1,"Sent %s\n",ACK);
 			
-			} else printf("Dropped %s\n",buffer); 
+			} else {
+                printf("Dropped %s\n",buffer); 
+                fprintf(f1,"Dropped %s\n",buffer); 
+            }
 			
 		} else {
 			char ACK[]="Acknowledgement:000000";
 			sprintf(ACK+16, "%d", expectedID);
+            
 
 			sendto(socketDesc, (const char *)ACK, strlen(ACK),MSG_CONFIRM, (const struct sockaddr *) &cliaddr,len);
 			printf("Sent %s\n",ACK);
+            fprintf(f1,"Sent %s\n",ACK);
 		}
 	}
-
+    fclose(f1); 
 	return 0;
 
-
+     
 }
