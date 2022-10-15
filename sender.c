@@ -69,6 +69,10 @@ int main(int argc, char * argv[])
 
 
 	}
+    printf("\n");
+    char Packet[]="Packet:0";
+    //sprintf(Packet+7, "%d", i);
+    sendto(socketDesc, (const char *)Packet, strlen(Packet),MSG_CONFIRM, (const struct sockaddr *) &servaddr,sizeof(servaddr));
 
 	close(socketDesc);
 	return 0;
