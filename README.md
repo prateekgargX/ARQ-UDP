@@ -16,11 +16,12 @@ gcc sender.c -o sender
 gcc receiver.c -o receiver
 ```
 To run the program,
-
 ```bash
 ./sender <SenderPort> <ReceiverPort> <RetransmissionTimer> <NoOfPacketsToBeSent>
 ./receiver <ReceiverPort> <SenderPort> <PacketDropProbability>
 ```
+Ex: `./sender 8080 4040 100 4` and `./receiver 8080 4040 0.6`
+
 Note that `NoOfPacketsToBeSent < 99999` and `RetransmissionTimer > 2*Delay_in_miliseconds`
 
-After execution, two files containing output, sender.txt and receiver.txt will be produced
+After execution, two files containing output, `sender.txt` and `receiver.txt` will be produced
