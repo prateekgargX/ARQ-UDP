@@ -78,7 +78,8 @@ int main(int argc, char * argv[])
 
 	}
     printf("\n");
-    
+    fprintf(f2,"\n");
+
     char Packet[]="Packet:0";
     sendto(socketDesc, (const char *)Packet, strlen(Packet),MSG_CONFIRM, (const struct sockaddr *) &servaddr,sizeof(servaddr));
 
