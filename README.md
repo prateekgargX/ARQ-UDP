@@ -1,6 +1,6 @@
 # ARQ-UDP
 
-We are implementing ARP on top of UDP sockets. We have used Stop and Wait algorithm.
+We are implementing ARQ on top of UDP sockets. We have used Stop and Wait algorithm.
 
 To emulate network delay, on linux machine you can use:
 
